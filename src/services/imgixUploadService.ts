@@ -35,7 +35,7 @@ class ImgixUploadService {
 
   constructor() {
     this.apiKey = IMGIX_CONFIG.apiKey
-    this.sourceId = IMGIX_CONFIG.sourceId
+    this.sourceId = IMGIX_CONFIG.sourceId?.trim() // Trim whitespace
     this.domain = IMGIX_CONFIG.domain
     
     // Debug logging to check for whitespace or formatting issues
@@ -87,9 +87,10 @@ class ImgixUploadService {
       throw new Error('Invalid Imgix API key format. API keys should start with "ak_".')
     }
 
-    // Validate source ID format (should be a hex string)
-    if (!/^[a-f0-9]+$/i.test(this.sourceId)) {
-      throw new Error('Invalid Imgix Source ID format. Source IDs should be hexadecimal strings.')
+    // Validate source ID format (should be a hex string, allow dashes)
+    const cleanSourceId = this.sourceId.replace(/[-\s]/g, '') // Remove dashes and spaces
+    if (!cleanSourceId || !/^[a-f0-9]+$/i.test(cleanSourceId)) {
+      throw new Error(`Invalid Imgix Source ID format. Source IDs should be hexadecimal strings. Got: "${this.sourceId}"`)
     }
 
     try {
