@@ -233,7 +233,9 @@ function App() {
       { name: 'H.265 1M', codec: 'h265', bitrate: '1M' },
       { name: 'H.265 3M', codec: 'h265', bitrate: '3M' },
       { name: 'H.265 5M', codec: 'h265', bitrate: '5M' },
-      { name: 'AV1 3M', codec: 'av1', bitrate: '3M' }
+      { name: 'AV1 1M', codec: 'av1', bitrate: '1M' },
+      { name: 'AV1 3M', codec: 'av1', bitrate: '3M' },
+      { name: 'AV1 5M', codec: 'av1', bitrate: '5M' }
     ]
     
     console.log(`Generating ${variantConfigs.length} video variants...`)
@@ -588,257 +590,394 @@ function App() {
                         🎥 Imgix Video Codec & Bitrate Analysis
                       </h4>
                       
-                      {/* Desktop Layout: Original Video and Variants Side by Side */}
-                      <div style={{ 
-                        display: 'grid',
-                        gridTemplateColumns: '1fr 2fr',
-                        gap: '20px',
-                        marginBottom: '20px'
-                      }}>
-                        {/* Original Video - Left Column */}
-                        {file.videoVariants.length > 0 && (
-                          <div>
-                            <h5 style={{ margin: '0 0 15px 0', fontSize: '13px', fontWeight: 'bold' }}>
+                      {/* Codec-Based Row Layout: Each codec gets its own row */}
+                      <div style={{ marginTop: '20px' }}>
+                        {/* Original Video Section */}
+                        {file.videoVariants?.length > 0 && (
+                          <div style={{ marginBottom: '24px' }}>
+                            <h5 style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold', color: '#343a40' }}>
                               📄 Original Video Analysis
                             </h5>
-                            
-                            {/* Original Video */}
                             <div style={{
-                              border: '2px solid #007bff',
-                              borderRadius: '8px',
-                              padding: '12px',
-                              backgroundColor: '#ffffff',
-                              marginBottom: '12px'
+                              display: 'grid',
+                              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                              gap: '16px'
                             }}>
-                              <video
-                                src={file.videoVariants[0].url}
-                                controls
-                                style={{
-                                  width: '100%',
-                                  height: 'auto',
-                                  aspectRatio: '16/9',
-                                  objectFit: 'contain',
-                                  borderRadius: '6px',
-                                  marginBottom: '8px'
-                                }}
-                              />
-                              <div style={{ fontSize: '11px', color: '#495057' }}>
-                                <div><strong>{file.videoVariants[0].name}</strong></div>
-                                {file.videoVariants[0].metadata && (
-                                  <div style={{ marginTop: '4px' }}>
-                                    {file.videoVariants[0].metadata.resolution && (
-                                      <div>📱 {file.videoVariants[0].metadata.resolution}</div>
-                                    )}
-                                    {file.videoVariants[0].metadata.containerFormat && (
-                                      <div>📁 {file.videoVariants[0].metadata.containerFormat}</div>
-                                    )}
-                                    {file.videoVariants[0].metadata.codec && (
-                                      <div>🎧 {file.videoVariants[0].metadata.codec}</div>
-                                    )}
-                                    {file.videoVariants[0].metadata.bitrate && (
-                                      <div>📊 Bitrate: {file.videoVariants[0].metadata.bitrate.toLocaleString()} kbps</div>
-                                    )}
-                                    {file.videoVariants[0].metadata.duration && (
-                                      <div>⏱️ {file.videoVariants[0].metadata.duration}s</div>
-                                    )}
-                                    {file.videoVariants[0].size && (
-                                      <div>📏 Size: {formatFileSize(file.videoVariants[0].size)}</div>
-                                    )}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                            
-                            {/* Format MP4 Variant */}
-                            {(() => {
-                              const formatMp4Variant = file.videoVariants.find(v => v.name === 'Format MP4')
-                              return formatMp4Variant && (
-                                <div style={{
-                                  border: '1px solid #28a745',
-                                  borderRadius: '8px',
-                                  padding: '12px',
-                                  backgroundColor: '#ffffff'
-                                }}>
-                                  <h6 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 'bold', color: '#495057' }}>
-                                    {formatMp4Variant.name}
-                                    {file.variantProgress && file.variantProgress[formatMp4Variant.name] === 100 && (
-                                      <span style={{ color: '#10b981', marginLeft: '4px' }}>✓</span>
-                                    )}
-                                  </h6>
-                                  
-                                  {file.variantProgress && file.variantProgress[formatMp4Variant.name] < 100 ? (
-                                    <div className="skeleton-video" style={{
-                                      width: '100%',
-                                      aspectRatio: '16/9',
-                                      backgroundColor: '#e9ecef',
-                                      borderRadius: '4px',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      fontSize: '10px',
-                                      color: '#6c757d',
-                                      marginBottom: '8px',
-                                      position: 'relative',
-                                      overflow: 'hidden'
-                                    }}>
-                                      <div className="shimmer"></div>
-                                      <span style={{ position: 'relative', zIndex: 1 }}>
-                                        Processing... {Math.round(file.variantProgress[formatMp4Variant.name] || 0)}%
-                                      </span>
+                              {/* Original Video */}
+                              <div style={{
+                                border: '2px solid #007bff',
+                                borderRadius: '8px',
+                                padding: '12px',
+                                backgroundColor: '#ffffff'
+                              }}>
+                                <video
+                                  src={file.videoVariants[0].url}
+                                  controls
+                                  style={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    aspectRatio: '16/9',
+                                    objectFit: 'contain',
+                                    borderRadius: '6px',
+                                    marginBottom: '8px'
+                                  }}
+                                />
+                                <div style={{ fontSize: '11px', color: '#495057' }}>
+                                  <div><strong>{file.videoVariants[0].name}</strong></div>
+                                  {file.videoVariants[0].metadata && (
+                                    <div style={{ marginTop: '4px' }}>
+                                      {file.videoVariants[0].metadata.resolution && (
+                                        <div>📱 {file.videoVariants[0].metadata.resolution}</div>
+                                      )}
+                                      {file.videoVariants[0].metadata.containerFormat && (
+                                        <div>📁 {file.videoVariants[0].metadata.containerFormat}</div>
+                                      )}
+                                      {file.videoVariants[0].metadata.codec && (
+                                        <div>🎧 {file.videoVariants[0].metadata.codec}</div>
+                                      )}
+                                      {file.videoVariants[0].metadata.bitrate && (
+                                        <div>📊 Bitrate: {file.videoVariants[0].metadata.bitrate.toLocaleString()} kbps</div>
+                                      )}
+                                      {file.videoVariants[0].metadata.duration && (
+                                        <div>⏱️ {file.videoVariants[0].metadata.duration}s</div>
+                                      )}
+                                      {file.videoVariants[0].size && (
+                                        <div>📏 Size: {formatFileSize(file.videoVariants[0].size)}</div>
+                                      )}
                                     </div>
-                                  ) : (
-                                    <video
-                                      src={formatMp4Variant.url}
-                                      controls
-                                      style={{
-                                        width: '100%',
-                                        height: 'auto',
-                                        aspectRatio: '16/9',
-                                        objectFit: 'contain',
-                                        borderRadius: '4px',
-                                        marginBottom: '8px'
-                                      }}
-                                    />
                                   )}
-                                  
-                                  <div style={{ fontSize: '9px', color: '#495057' }}>
-                                    <div><strong>📦 {formatMp4Variant.codec}</strong></div>
-                                    <div>🔗 URL: <a href={formatMp4Variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '8px', wordBreak: 'break-all', color: '#007bff' }}>{formatMp4Variant.url}</a></div>
-                                    {formatMp4Variant.size && (
-                                      <div>📏 Size: {formatFileSize(formatMp4Variant.size)}</div>
-                                    )}
-                                  </div>
                                 </div>
-                              )
-                            })()}
+                              </div>
+                              
+                              {/* Format MP4 Variant */}
+                              {(() => {
+                                const formatMp4Variant = file.videoVariants.find(v => v.name === 'Format MP4')
+                                return formatMp4Variant && (
+                                  <div style={{
+                                    border: '1px solid #28a745',
+                                    borderRadius: '8px',
+                                    padding: '12px',
+                                    backgroundColor: '#ffffff'
+                                  }}>
+                                    <h6 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 'bold', color: '#495057' }}>
+                                      {formatMp4Variant.name}
+                                      {file.variantProgress && file.variantProgress[formatMp4Variant.name] === 100 && (
+                                        <span style={{ color: '#10b981', marginLeft: '4px' }}>✓</span>
+                                      )}
+                                    </h6>
+                                    
+                                    {file.variantProgress && file.variantProgress[formatMp4Variant.name] < 100 ? (
+                                      <div className="skeleton-video" style={{
+                                        width: '100%',
+                                        aspectRatio: '16/9',
+                                        backgroundColor: '#e9ecef',
+                                        borderRadius: '4px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '10px',
+                                        color: '#6c757d',
+                                        marginBottom: '8px',
+                                        position: 'relative',
+                                        overflow: 'hidden'
+                                      }}>
+                                        <div className="shimmer"></div>
+                                        <span style={{ position: 'relative', zIndex: 1 }}>
+                                          Processing... {Math.round(file.variantProgress[formatMp4Variant.name] || 0)}%
+                                        </span>
+                                      </div>
+                                    ) : (
+                                      <video
+                                        src={formatMp4Variant.url}
+                                        controls
+                                        style={{
+                                          width: '100%',
+                                          height: 'auto',
+                                          aspectRatio: '16/9',
+                                          objectFit: 'contain',
+                                          borderRadius: '4px',
+                                          marginBottom: '8px'
+                                        }}
+                                      />
+                                    )}
+                                    
+                                    <div style={{ fontSize: '9px', color: '#495057' }}>
+                                      <div><strong>📦 {formatMp4Variant.codec}</strong></div>
+                                      <div>🔗 URL: <a href={formatMp4Variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '8px', wordBreak: 'break-all', color: '#007bff' }}>{formatMp4Variant.url}</a></div>
+                                      {formatMp4Variant.size && (
+                                        <div>📏 Size: {formatFileSize(formatMp4Variant.size)}</div>
+                                      )}
+                                    </div>
+                                  </div>
+                                )
+                              })()}
+                            </div>
                           </div>
                         )}
                         
-                        {/* Optimized Variants - Right Column */}
-                        {(file.videoVariants?.length || 0) > 1 && (
-                          <div>
-                            <h5 style={{ margin: '0 0 15px 0', fontSize: '13px', fontWeight: 'bold' }}>
-                              🔄 Optimized Variants
-                            </h5>
-                            <div style={{ 
-                              display: 'grid', 
-                              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-                              gap: '12px',
-                              maxHeight: '600px',
-                              overflowY: 'auto',
-                              paddingRight: '8px'
-                            }}>
-                              {file.videoVariants?.slice(1).filter(variant => variant.name !== 'Format MP4').map((variant, index) => (
-                                <div key={index + 1} style={{
-                                  border: '1px solid #dee2e6',
-                                  borderRadius: '6px',
-                                  padding: '10px',
-                                  backgroundColor: '#ffffff'
-                                }}>
-                                  <h6 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 'bold', color: '#495057' }}>
-                                    {variant.name}
-                                    {file.variantProgress && file.variantProgress[variant.name] === 100 && (
-                                      <span style={{ color: '#10b981', marginLeft: '4px' }}>✓</span>
-                                    )}
-                                  </h6>
-                                  
-                                  {/* Show progress or video */}
-                                  {file.variantProgress && file.variantProgress[variant.name] < 100 ? (
-                                    <div className="skeleton-video" style={{
-                                      width: '100%',
-                                      aspectRatio: '16/9',
-                                      backgroundColor: '#e9ecef',
-                                      borderRadius: '4px',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      fontSize: '10px',
-                                      color: '#6c757d',
-                                      marginBottom: '8px',
-                                      position: 'relative',
-                                      overflow: 'hidden'
-                                    }}>
-                                      <div className="shimmer"></div>
-                                      <span style={{ position: 'relative', zIndex: 1 }}>
-                                        Processing... {Math.round(file.variantProgress[variant.name] || 0)}%
-                                      </span>
-                                    </div>
-                                  ) : (
-                                    <video
-                                      src={variant.url}
-                                      controls
-                                      style={{
-                                        width: '100%',
-                                        height: 'auto',
-                                        aspectRatio: '16/9',
-                                        objectFit: 'contain',
-                                        borderRadius: '4px',
-                                        marginBottom: '8px'
-                                      }}
-                                    />
-                                  )}
-                                  
-                                  <div style={{ fontSize: '9px', color: '#495057' }}>
-                                    <div><strong>📦 {variant.codec}</strong></div>
-                                    <div>📊 Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
-                                    <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '8px', wordBreak: 'break-all', color: '#007bff' }}>{variant.url}</a></div>
-                                    {variant.size && (
-                                      <div>📏 Size: {formatFileSize(variant.size)}</div>
-                                    )}
-                                    {variant.metadata && variant.metadata.bitrate && (
-                                      <div style={{
-                                        marginTop: '4px',
-                                        padding: '2px 4px',
-                                        backgroundColor: '#e3f2fd',
-                                        borderRadius: '2px',
-                                        fontSize: '9px'
-                                      }}>
-                                        🎯 Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? '✓' : '⚠️'}
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
-                              
-                              {/* Show skeleton placeholders for variants still being processed */}
-                              {(file.videoVariants?.filter(v => v.name !== 'Format MP4').length || 0) < 8 && (
-                                Array.from({ length: Math.max(0, 8 - (file.videoVariants?.filter(v => v.name !== 'Format MP4').length || 0)) }, (_, i) => (
-                                  <div key={`skeleton-${i}`} style={{
-                                    border: '1px solid #dee2e6',
+                        {/* H.264 Codec Row */}
+                        {(() => {
+                          const h264Variants = file.videoVariants?.filter(v => v.name.startsWith('H.264')) || []
+                          return h264Variants.length > 0 && (
+                            <div style={{ marginBottom: '24px' }}>
+                              <h5 style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold', color: '#dc3545' }}>
+                                🔴 H.264 Codec Analysis
+                              </h5>
+                              <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                                gap: '12px'
+                              }}>
+                                {h264Variants.map((variant, index) => (
+                                  <div key={`h264-${index}`} style={{
+                                    border: '1px solid #dc3545',
                                     borderRadius: '6px',
                                     padding: '10px',
                                     backgroundColor: '#ffffff'
                                   }}>
-                                    <div style={{
-                                      width: '100%',
-                                      height: '16px',
-                                      backgroundColor: '#e9ecef',
-                                      borderRadius: '2px',
-                                      marginBottom: '8px'
-                                    }}></div>
-                                    <div className="skeleton-video" style={{
-                                      width: '100%',
-                                      aspectRatio: '16/9',
-                                      backgroundColor: '#e9ecef',
-                                      borderRadius: '4px',
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      justifyContent: 'center',
-                                      fontSize: '10px',
-                                      color: '#6c757d',
-                                      marginBottom: '8px',
-                                      position: 'relative',
-                                      overflow: 'hidden'
-                                    }}>
-                                      <div className="shimmer"></div>
-                                      Queued...
+                                    <h6 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 'bold', color: '#495057' }}>
+                                      {variant.name}
+                                      {file.variantProgress && file.variantProgress[variant.name] === 100 && (
+                                        <span style={{ color: '#10b981', marginLeft: '4px' }}>✓</span>
+                                      )}
+                                    </h6>
+                                    
+                                    {file.variantProgress && file.variantProgress[variant.name] < 100 ? (
+                                      <div className="skeleton-video" style={{
+                                        width: '100%',
+                                        aspectRatio: '16/9',
+                                        backgroundColor: '#e9ecef',
+                                        borderRadius: '4px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '10px',
+                                        color: '#6c757d',
+                                        marginBottom: '8px',
+                                        position: 'relative',
+                                        overflow: 'hidden'
+                                      }}>
+                                        <div className="shimmer"></div>
+                                        <span style={{ position: 'relative', zIndex: 1 }}>
+                                          Processing... {Math.round(file.variantProgress[variant.name] || 0)}%
+                                        </span>
+                                      </div>
+                                    ) : (
+                                      <video
+                                        src={variant.url}
+                                        controls
+                                        style={{
+                                          width: '100%',
+                                          height: 'auto',
+                                          aspectRatio: '16/9',
+                                          objectFit: 'contain',
+                                          borderRadius: '4px',
+                                          marginBottom: '8px'
+                                        }}
+                                      />
+                                    )}
+                                    
+                                    <div style={{ fontSize: '9px', color: '#495057' }}>
+                                      <div><strong>📦 {variant.codec}</strong></div>
+                                      <div>📊 Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
+                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '8px', wordBreak: 'break-all', color: '#007bff' }}>{variant.url}</a></div>
+                                      {variant.size && (
+                                        <div>📏 Size: {formatFileSize(variant.size)}</div>
+                                      )}
+                                      {variant.metadata && variant.metadata.bitrate && (
+                                        <div style={{
+                                          marginTop: '4px',
+                                          padding: '2px 4px',
+                                          backgroundColor: '#ffe6e6',
+                                          borderRadius: '2px',
+                                          fontSize: '9px'
+                                        }}>
+                                          🎯 Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? '✓' : '⚠️'}
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
-                                ))
-                              )}
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )
+                        })()}
+                        
+                        {/* H.265 Codec Row */}
+                        {(() => {
+                          const h265Variants = file.videoVariants?.filter(v => v.name.startsWith('H.265')) || []
+                          return h265Variants.length > 0 && (
+                            <div style={{ marginBottom: '24px' }}>
+                              <h5 style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold', color: '#ffc107' }}>
+                                🟡 H.265 Codec Analysis
+                              </h5>
+                              <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                                gap: '12px'
+                              }}>
+                                {h265Variants.map((variant, index) => (
+                                  <div key={`h265-${index}`} style={{
+                                    border: '1px solid #ffc107',
+                                    borderRadius: '6px',
+                                    padding: '10px',
+                                    backgroundColor: '#ffffff'
+                                  }}>
+                                    <h6 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 'bold', color: '#495057' }}>
+                                      {variant.name}
+                                      {file.variantProgress && file.variantProgress[variant.name] === 100 && (
+                                        <span style={{ color: '#10b981', marginLeft: '4px' }}>✓</span>
+                                      )}
+                                    </h6>
+                                    
+                                    {file.variantProgress && file.variantProgress[variant.name] < 100 ? (
+                                      <div className="skeleton-video" style={{
+                                        width: '100%',
+                                        aspectRatio: '16/9',
+                                        backgroundColor: '#e9ecef',
+                                        borderRadius: '4px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '10px',
+                                        color: '#6c757d',
+                                        marginBottom: '8px',
+                                        position: 'relative',
+                                        overflow: 'hidden'
+                                      }}>
+                                        <div className="shimmer"></div>
+                                        <span style={{ position: 'relative', zIndex: 1 }}>
+                                          Processing... {Math.round(file.variantProgress[variant.name] || 0)}%
+                                        </span>
+                                      </div>
+                                    ) : (
+                                      <video
+                                        src={variant.url}
+                                        controls
+                                        style={{
+                                          width: '100%',
+                                          height: 'auto',
+                                          aspectRatio: '16/9',
+                                          objectFit: 'contain',
+                                          borderRadius: '4px',
+                                          marginBottom: '8px'
+                                        }}
+                                      />
+                                    )}
+                                    
+                                    <div style={{ fontSize: '9px', color: '#495057' }}>
+                                      <div><strong>📦 {variant.codec}</strong></div>
+                                      <div>📊 Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
+                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '8px', wordBreak: 'break-all', color: '#007bff' }}>{variant.url}</a></div>
+                                      {variant.size && (
+                                        <div>📏 Size: {formatFileSize(variant.size)}</div>
+                                      )}
+                                      {variant.metadata && variant.metadata.bitrate && (
+                                        <div style={{
+                                          marginTop: '4px',
+                                          padding: '2px 4px',
+                                          backgroundColor: '#fff3cd',
+                                          borderRadius: '2px',
+                                          fontSize: '9px'
+                                        }}>
+                                          🎯 Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? '✓' : '⚠️'}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )
+                        })()}
+                        
+                        {/* AV1 Codec Row */}
+                        {(() => {
+                          const av1Variants = file.videoVariants?.filter(v => v.name.startsWith('AV1')) || []
+                          return av1Variants.length > 0 && (
+                            <div style={{ marginBottom: '24px' }}>
+                              <h5 style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold', color: '#28a745' }}>
+                                🟢 AV1 Codec Analysis
+                              </h5>
+                              <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                                gap: '12px'
+                              }}>
+                                {av1Variants.map((variant, index) => (
+                                  <div key={`av1-${index}`} style={{
+                                    border: '1px solid #28a745',
+                                    borderRadius: '6px',
+                                    padding: '10px',
+                                    backgroundColor: '#ffffff'
+                                  }}>
+                                    <h6 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 'bold', color: '#495057' }}>
+                                      {variant.name}
+                                      {file.variantProgress && file.variantProgress[variant.name] === 100 && (
+                                        <span style={{ color: '#10b981', marginLeft: '4px' }}>✓</span>
+                                      )}
+                                    </h6>
+                                    
+                                    {file.variantProgress && file.variantProgress[variant.name] < 100 ? (
+                                      <div className="skeleton-video" style={{
+                                        width: '100%',
+                                        aspectRatio: '16/9',
+                                        backgroundColor: '#e9ecef',
+                                        borderRadius: '4px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '10px',
+                                        color: '#6c757d',
+                                        marginBottom: '8px',
+                                        position: 'relative',
+                                        overflow: 'hidden'
+                                      }}>
+                                        <div className="shimmer"></div>
+                                        <span style={{ position: 'relative', zIndex: 1 }}>
+                                          Processing... {Math.round(file.variantProgress[variant.name] || 0)}%
+                                        </span>
+                                      </div>
+                                    ) : (
+                                      <video
+                                        src={variant.url}
+                                        controls
+                                        style={{
+                                          width: '100%',
+                                          height: 'auto',
+                                          aspectRatio: '16/9',
+                                          objectFit: 'contain',
+                                          borderRadius: '4px',
+                                          marginBottom: '8px'
+                                        }}
+                                      />
+                                    )}
+                                    
+                                    <div style={{ fontSize: '9px', color: '#495057' }}>
+                                      <div><strong>📦 {variant.codec}</strong></div>
+                                      <div>📊 Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
+                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '8px', wordBreak: 'break-all', color: '#007bff' }}>{variant.url}</a></div>
+                                      {variant.size && (
+                                        <div>📏 Size: {formatFileSize(variant.size)}</div>
+                                      )}
+                                      {variant.metadata && variant.metadata.bitrate && (
+                                        <div style={{
+                                          marginTop: '4px',
+                                          padding: '2px 4px',
+                                          backgroundColor: '#d4edda',
+                                          borderRadius: '2px',
+                                          fontSize: '9px'
+                                        }}>
+                                          🎯 Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? '✓' : '⚠️'}
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )
+                        })()}
                       </div>
 
                       {/* Enhanced Compression Analysis */}
