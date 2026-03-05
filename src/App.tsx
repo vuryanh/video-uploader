@@ -469,8 +469,8 @@ function App() {
   return (
     <div className="app">
       <header>
-        <h1>Video Uploader Demo</h1>
-        <p>Upload and manage your video files with drag & drop support</p>
+        <h1>Imgix Video Codec Comparisons</h1>
+        <p>Upload videos to analyze and compare H.264, H.265, and AV1 codec performance across multiple bitrates. See real-time file sizes, compression ratios, and quality differences powered by Imgix's video processing API.</p>
       </header>
 
       <div 
