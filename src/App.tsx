@@ -622,7 +622,7 @@ function App() {
                                     marginBottom: '8px'
                                   }}
                                 />
-                                <div style={{ fontSize: '11px', color: '#495057' }}>
+                                <div style={{ fontSize: '12px', color: '#495057' }}>
                                   <div><strong>{file.videoVariants[0].name}</strong></div>
                                   {file.videoVariants[0].metadata && (
                                     <div style={{ marginTop: '4px' }}>
@@ -675,7 +675,7 @@ function App() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '10px',
+                                        fontSize: '12px',
                                         color: '#6c757d',
                                         marginBottom: '8px',
                                         position: 'relative',
@@ -703,7 +703,7 @@ function App() {
                                     
                                     <div style={{ fontSize: '9px', color: '#495057' }}>
                                       <div><strong>📦 {formatMp4Variant.codec}</strong></div>
-                                      <div>🔗 URL: <a href={formatMp4Variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '8px', wordBreak: 'break-all', color: '#007bff' }}>{formatMp4Variant.url}</a></div>
+                                      <div>🔗 URL: <a href={formatMp4Variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#007bff' }}>{formatMp4Variant.url}</a></div>
                                       {formatMp4Variant.size && (
                                         <div>📏 Size: {formatFileSize(formatMp4Variant.size)}</div>
                                       )}
@@ -751,7 +751,7 @@ function App() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '10px',
+                                        fontSize: '12px',
                                         color: '#6c757d',
                                         marginBottom: '8px',
                                         position: 'relative',
@@ -777,10 +777,10 @@ function App() {
                                       />
                                     )}
                                     
-                                    <div style={{ fontSize: '9px', color: '#495057' }}>
+                                    <div style={{ fontSize: '11px', color: '#495057' }}>
                                       <div><strong>📦 {variant.codec}</strong></div>
                                       <div>📊 Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
-                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '8px', wordBreak: 'break-all', color: '#007bff' }}>{variant.url}</a></div>
+                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#007bff' }}>{variant.url}</a></div>
                                       {variant.size && (
                                         <div>📏 Size: {formatFileSize(variant.size)}</div>
                                       )}
@@ -790,7 +790,7 @@ function App() {
                                           padding: '2px 4px',
                                           backgroundColor: '#ffe6e6',
                                           borderRadius: '2px',
-                                          fontSize: '9px'
+                                          fontSize: '10px'
                                         }}>
                                           🎯 Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? '✓' : '⚠️'}
                                         </div>
@@ -839,7 +839,7 @@ function App() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '10px',
+                                        fontSize: '12px',
                                         color: '#6c757d',
                                         marginBottom: '8px',
                                         position: 'relative',
@@ -865,10 +865,10 @@ function App() {
                                       />
                                     )}
                                     
-                                    <div style={{ fontSize: '9px', color: '#495057' }}>
+                                    <div style={{ fontSize: '11px', color: '#495057' }}>
                                       <div><strong>📦 {variant.codec}</strong></div>
                                       <div>📊 Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
-                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '8px', wordBreak: 'break-all', color: '#007bff' }}>{variant.url}</a></div>
+                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#007bff' }}>{variant.url}</a></div>
                                       {variant.size && (
                                         <div>📏 Size: {formatFileSize(variant.size)}</div>
                                       )}
@@ -878,7 +878,7 @@ function App() {
                                           padding: '2px 4px',
                                           backgroundColor: '#fff3cd',
                                           borderRadius: '2px',
-                                          fontSize: '9px'
+                                          fontSize: '10px'
                                         }}>
                                           🎯 Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? '✓' : '⚠️'}
                                         </div>
@@ -927,7 +927,7 @@ function App() {
                                         display: 'flex',
                                         alignItems: 'center',
                                         justifyContent: 'center',
-                                        fontSize: '10px',
+                                        fontSize: '12px',
                                         color: '#6c757d',
                                         marginBottom: '8px',
                                         position: 'relative',
@@ -953,10 +953,10 @@ function App() {
                                       />
                                     )}
                                     
-                                    <div style={{ fontSize: '9px', color: '#495057' }}>
+                                    <div style={{ fontSize: '11px', color: '#495057' }}>
                                       <div><strong>📦 {variant.codec}</strong></div>
                                       <div>📊 Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
-                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '8px', wordBreak: 'break-all', color: '#007bff' }}>{variant.url}</a></div>
+                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#007bff' }}>{variant.url}</a></div>
                                       {variant.size && (
                                         <div>📏 Size: {formatFileSize(variant.size)}</div>
                                       )}
@@ -966,7 +966,7 @@ function App() {
                                           padding: '2px 4px',
                                           backgroundColor: '#d4edda',
                                           borderRadius: '2px',
-                                          fontSize: '9px'
+                                          fontSize: '10px'
                                         }}>
                                           🎯 Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? '✓' : '⚠️'}
                                         </div>
@@ -1011,14 +1011,14 @@ function App() {
                         {file.videoVariants && file.videoVariants.length > 1 && (
                           <div style={{ color: '#495057' }}>
                             <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>📈 Compression Results:</div>
-                            <div style={{ fontSize: '10px', lineHeight: '1.4' }}>
-                              • **Variants Generated**: {file.videoVariants.length - 1} optimized versions<br/>
-                              • **Codecs Tested**: {[...new Set(file.videoVariants.slice(1).map(v => v.codec))].join(', ')}<br/>
-                              • **Bitrate Range**: {Math.min(...file.videoVariants.slice(1).filter(v => v.bitrate).map(v => v.bitrate!)).toLocaleString()}kbps - {Math.max(...file.videoVariants.slice(1).filter(v => v.bitrate).map(v => v.bitrate!)).toLocaleString()}kbps<br/>
+                            <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+                              • <strong>Variants Generated</strong>: {file.videoVariants.length - 1} optimized versions<br/>
+                              • <strong>Codecs Tested</strong>: {[...new Set(file.videoVariants.slice(1).map(v => v.codec))].join(', ')}<br/>
+                              • <strong>Bitrate Range</strong>: {Math.min(...file.videoVariants.slice(1).filter(v => v.bitrate).map(v => v.bitrate!)).toLocaleString()}kbps - {Math.max(...file.videoVariants.slice(1).filter(v => v.bitrate).map(v => v.bitrate!)).toLocaleString()}kbps<br/>
                               {file.videoVariants.filter(v => v.size).length > 1 && (
                                 <>
-                                  • **Size Range**: {formatFileSize(Math.min(...file.videoVariants.filter(v => v.size).map(v => v.size!)))} - {formatFileSize(Math.max(...file.videoVariants.filter(v => v.size).map(v => v.size!)))}<br/>
-                                  • **Best Compression**: {(() => {
+                                  • <strong>Size Range</strong>: {formatFileSize(Math.min(...file.videoVariants.filter(v => v.size).map(v => v.size!)))} - {formatFileSize(Math.max(...file.videoVariants.filter(v => v.size).map(v => v.size!)))}<br/>
+                                  • <strong>Best Compression</strong>: {(() => {
                                     const originalSize = file.videoVariants[0]?.size
                                     const smallestVariant = file.videoVariants.slice(1).filter(v => v.size).reduce((smallest, current) => 
                                       current.size! < smallest.size! ? current : smallest
