@@ -1,0 +1,595 @@
+.app {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-size: 2.5rem;
+}
+
+header p {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.debug-toggle {
+  margin-top: 1rem;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.debug-toggle:hover {
+  background-color: #e0e0e0;
+  border-color: #bbb;
+}
+
+.debug-panel {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.debug-panel h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.debug-panel h4 {
+  margin: 1rem 0 0.5rem 0;
+  color: #555;
+  font-size: 1rem;
+}
+
+.config-status {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.status-item.configured {
+  background-color: #d1edff;
+  border: 1px solid #b3d9ff;
+}
+
+.status-item.not-configured {
+  background-color: #ffe6e6;
+  border: 1px solid #ffcccc;
+}
+
+.config-details {
+  margin-top: 1rem;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.config-grid div {
+  padding: 0.25rem;
+}
+
+.config-warning {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.config-warning p {
+  margin: 0.5rem 0 0 0;
+}
+
+.test-section {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.test-button {
+  background-color: #646cff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.test-button:hover {
+  background-color: #535bf2;
+}
+
+.test-result {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-family: monospace;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+}
+
+.upload-zone {
+  border: 2px dashed #ddd;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-zone:hover,
+.upload-zone.drag-over {
+  border-color: #646cff;
+  background-color: #f0f0ff;
+  transform: translateY(-2px);
+}
+
+.upload-content svg {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.upload-content h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.upload-content p {
+  margin: 1rem 0;
+  color: #666;
+}
+
+.upload-button {
+  display: inline-block;
+  background-color: #646cff;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+  background-color: #535bf2;
+}
+
+.upload-hint {
+  font-size: 0.9rem;
+  color: #999;
+}
+
+.files-section {
+  margin-top: 2rem;
+}
+
+.files-section h2 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.5rem;
+}
+
+.files-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.file-item {
+  display: block;
+  padding: 1rem;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.file-item.mamari-featured {
+  display: block;
+  padding: 1.5rem;
+  background-color: #f8f9ff;
+  border: 2px solid #007bff;
+  border-radius: 12px;
+}
+
+.file-info {
+  flex-grow: 1;
+}
+
+.file-name {
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.file-details {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.asset-info {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 0.25rem;
+  font-family: monospace;
+}
+
+.asset-info div {
+  margin-bottom: 0.1rem;
+}
+
+.file-status {
+  min-width: 200px;
+  text-align: right;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-bar {
+  width: 100px;
+  height: 8px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #646cff;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.8rem;
+  color: #666;
+  min-width: 30px;
+}
+
+.completed-status {
+  text-align: left;
+}
+
+.status-complete {
+  color: #28a745;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.status-error {
+  color: #dc3545;
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.error-message {
+  font-size: 0.8rem;
+  color: #dc3545;
+  font-style: italic;
+}
+
+.imgix-urls {
+  font-size: 0.8rem;
+}
+
+.url-group {
+  margin-bottom: 0.25rem;
+}
+
+.url-group label {
+  font-weight: 500;
+  color: #333;
+  display: block;
+  margin-bottom: 0.1rem;
+}
+
+.size-links {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.size-links a,
+.url-group > a {
+  color: #646cff;
+  text-decoration: none;
+  padding: 0.1rem 0.3rem;
+  border: 1px solid #646cff;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  transition: all 0.2s ease;
+}
+
+.size-links a:hover,
+.url-group > a:hover {
+  background-color: #646cff;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .app {
+    padding: 1rem;
+  }
+  
+  .upload-zone {
+    padding: 2rem 1rem;
+  }
+  
+  .file-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .file-status {
+    min-width: auto;
+    width: 100%;
+    text-align: left;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  header h1 {
+    color: #fff;
+  }
+  
+  header p {
+    color: #ccc;
+  }
+  
+  .upload-zone {
+    border-color: #555;
+    background-color: #2a2a2a;
+  }
+  
+  .upload-zone:hover,
+  .upload-zone.drag-over {
+    border-color: #646cff;
+    background-color: #3a3a5a;
+  }
+  
+  .upload-content svg {
+    color: #ccc;
+  }
+  
+  .upload-content h3 {
+    color: #fff;
+  }
+  
+  .upload-content p {
+    color: #ccc;
+  }
+  
+  .files-section h2 {
+    color: #fff;
+  }
+  
+  .file-item {
+    background-color: #333;
+    border-color: #555;
+  }
+  
+  .file-name {
+    color: #fff;
+  }
+  
+  .file-details {
+    color: #ccc;
+  }
+
+  .s3-info {
+    color: #aaa;
+  }
+
+  .asset-info {
+    color: #aaa;
+  }
+
+  .progress-text {
+    color: #ccc;
+  }
+
+  .url-group label {
+    color: #fff;
+  }
+
+  .error-message {
+    color: #ff6b6b;
+  }
+
+  .debug-toggle {
+    background-color: #444;
+    border-color: #666;
+    color: #fff;
+  }
+
+  .debug-toggle:hover {
+    background-color: #555;
+    border-color: #777;
+  }
+
+  .debug-panel {
+    background-color: #2a2a2a;
+    border-color: #555;
+  }
+
+  .debug-panel h3,
+  .debug-panel h4 {
+    color: #fff;
+  }
+
+  .status-item.configured {
+    background-color: #1a4a5a;
+    border-color: #2a6a7a;
+    color: #fff;
+  }
+
+  .status-item.not-configured {
+    background-color: #4a1a1a;
+    border-color: #6a2a2a;
+    color: #fff;
+  }
+
+  .config-grid div {
+    color: #ccc;
+  }
+
+  .config-warning {
+    background-color: #3a3020;
+    border-color: #4a4030;
+    color: #fff;
+  }
+
+  .test-section {
+    border-top-color: #555;
+  }
+
+  .test-button {
+    background-color: #646cff;
+  }
+
+  .test-button:hover {
+    background-color: #535bf2;
+  }
+
+  .test-result {
+    background-color: #2a2a2a;
+    border-color: #555;
+    color: #fff;
+  }
+}
+
+/* Skeleton loader animations */
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: calc(200px + 100%) 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+.skeleton-video {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #999;
+  font-size: 12px;
+}
+
+/* Enhanced progress indicators */
+.progress-ring {
+  transform: rotate(-90deg);
+  width: 20px;
+  height: 20px;
+}
+
+.progress-ring-circle {
+  stroke: #d1d5db;
+  stroke-width: 2;
+  fill: transparent;
+  r: 8;
+  cx: 10;
+  cy: 10;
+  stroke-dasharray: 50.27;
+  stroke-dashoffset: 50.27;
+  transition: stroke-dashoffset 0.3s ease;
+}
+
+.progress-ring-circle.active {
+  stroke: #3b82f6;
+}
+
+/* Success animation */
+@keyframes checkmark {
+  0% { stroke-dasharray: 0 50; }
+  100% { stroke-dasharray: 50 50; }
+}
+
+.success-checkmark {
+  stroke: #10b981;
+  stroke-width: 2;
+  fill: none;
+  animation: checkmark 0.6s ease-in-out;
+}
+
+/* Processing stage indicators */
+.stage-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  background: #f8fafc;
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.stage-indicator.active {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+}
+
+.stage-indicator.completed {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

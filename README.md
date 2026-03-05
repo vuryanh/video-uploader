@@ -1,0 +1,284 @@
+# Video Uploader Demo
+
+A modern React TypeScript application for uploading video files directly to Imgix using their Management API for comprehensive video codec and bitrate optimization analysis.
+
+## 🚀 Live Demo
+
+**GitHub Pages:** https://YOUR_USERNAME.github.io/video-uploader/
+
+## Features
+
+- 📁 **Drag & Drop Upload** - Intuitive video file upload interface
+- 🎥 **Direct Imgix Upload** - Uses Imgix Management API for direct uploads  
+- 📊 **Codec Analysis** - Comprehensive H.264, H.265, and AV1 codec comparison
+- ⚡ **Bitrate Optimization** - Multiple bitrate variants (1M, 3M, 5M) for each codec
+- 🔍 **Progressive Loading** - Videos load in stages with skeleton loaders and real-time progress
+- 📈 **Bandwidth Analysis** - Calculated from file size and duration with accuracy metrics
+- 🖥️ **Desktop Optimized** - 1400px max-width layout designed for desktop browsers
+- 📱 **Responsive Design** - Works on all device sizes
+- 🎯 **Visual Feedback** - SVG progress rings, stage indicators, and success animations  
+- 🔗 **Complete URLs** - Clickable links to all video variants and original files
+- 📏 **File Size Display** - Shows compression results and size comparisons
+
+## Video Analysis Capabilities
+
+### Codec Comparison
+- **H.264/AVC** - Industry standard, maximum compatibility
+- **H.265/HEVC** - Next-gen codec, 50% better compression
+- **AV1** - Latest open standard, best compression
+
+### Bitrate Variants  
+- **1M** (1,000 kbps) - Mobile/low bandwidth
+- **3M** (3,000 kbps) - Standard quality
+- **5M** (5,000 kbps) - High quality
+
+### File Analysis
+- **Original Codec Detection** - Reads file headers to identify source codec
+- **Container Format** - MP4, MOV, AVI, MKV, WebM detection
+- **Bitrate Calculation** - `(fileSize * 8) / (duration * 1024)` = kbps
+- **Compression Efficiency** - Shows size reduction percentages
+
+## Architecture
+
+```
+Video File → Imgix Management API → Instant Optimization → Optimized Video URLs
+```
+
+1. **Direct Upload**: Videos are uploaded directly to Imgix via Management API
+2. **Instant Processing**: Imgix automatically processes and optimizes videos
+3. **Immediate Delivery**: Multiple optimized formats and sizes are instantly available
+
+## Technologies Used
+
+- **React 18** - Modern React with hooks
+- **TypeScript** - Type-safe development
+- **Vite** - Fast development and build tool
+- **Imgix Management API** - Direct upload and optimization
+- **CSS3** - Custom styling with responsive design
+- **ESLint** - Code linting and quality
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js (version 16 or higher)
+- npm or yarn package manager
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd video-uploader
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. **Configure Environment Variables:**
+   Copy the example environment file and add your credentials:
+```bash
+cp .env.example .env
+```
+
+   Edit `.env` with your Imgix Management API credentials:
+```env
+# Imgix Management API Configuration
+VITE_IMGIX_DOMAIN=your-domain.imgix.net
+VITE_IMGIX_API_KEY=your-imgix-api-key
+VITE_IMGIX_SOURCE_ID=your-imgix-source-id
+```
+
+4. **Set up Imgix Management API:**
+   - Create an Imgix account and get your domain
+   - Generate an API key from the Imgix dashboard
+   - Create a source and get the Source ID
+   - Ensure your source has upload permissions enabled
+
+5. Start the development server:
+```bash
+npm run dev
+```
+
+6. Open your browser and navigate to `http://localhost:5173`
+
+## Configuration
+
+### Imgix Management API Setup
+
+1. **Create Imgix Account**: Sign up at [imgix.com](https://imgix.com)
+
+2. **Get Your Domain**: From your Imgix dashboard, note your domain (e.g., `my-app.imgix.net`)
+
+3. **Generate API Key**: 
+   - Go to API Keys in your Imgix dashboard
+   - Create a new API key with upload permissions
+   - Copy the API key for your `.env` file
+
+4. **Create a Source**:
+   - Create a new source in Imgix (Web Folder type recommended)
+   - Enable "Allow Uploads" in the source settings
+   - Copy the Source ID from the source details
+
+5. **Update Environment Variables**:
+```env
+VITE_IMGIX_DOMAIN=your-domain.imgix.net
+VITE_IMGIX_API_KEY=your-api-key-here  
+VITE_IMGIX_SOURCE_ID=your-source-id-here
+```
+
+## Available Scripts
+
+- `npm run dev` - Start the development server
+- `npm run build` - Build the project for production
+- `npm run preview` - Preview the production build locally
+- `npm run lint` - Run ESLint to check code quality
+
+## Usage
+
+1. **Upload Videos**: Open the application in your browser
+2. **Select Files**: Drag and drop video files onto the upload zone, or click "Choose Files" to select files  
+3. **Monitor Progress**: Watch real-time upload progress to Imgix
+4. **Access Optimized Videos**: Once uploaded, you'll see:
+   - The Imgix Asset ID for your video
+   - Origin path where your video is stored
+   - Thumbnail image generated by Imgix
+   - Multiple optimized video sizes (Small, Medium, Large, Original)
+   - Direct links to view each version
+
+## Video Output
+
+After successful upload, each video provides:
+
+- **Imgix Asset ID**: Unique identifier for tracking your uploaded video
+- **Origin Path**: The file path within your Imgix source
+- **Thumbnail**: Auto-generated thumbnail image via Imgix
+- **Multiple Formats**: 
+  - Small (480x270) - Perfect for mobile or preview
+  - Medium (720x405) - Standard web viewing
+  - Large (1280x720) - HD quality
+  - Original - Full resolution with Imgix optimization
+
+All videos are automatically optimized by Imgix for:
+- **Compression**: Reduced file sizes while maintaining quality
+- **Format**: Automatic format selection (MP4, WebM based on browser support)
+- **Adaptive**: Responsive delivery based on device and connection
+
+## Supported File Formats
+
+The application accepts the following video formats:
+- MP4
+- AVI
+- MOV
+- WMV
+- MKV
+- And other standard video formats
+
+## Project Structure
+
+```
+video-uploader/
+├── .github/workflows/   # GitHub Actions deployment
+├── public/              # Static assets
+├── src/
+│   ├── App.tsx         # Main application component
+│   ├── App.css         # Application styles
+│   ├── main.tsx        # Application entry point
+│   └── index.css       # Global styles
+├── index.html          # HTML template
+├── package.json        # Dependencies and scripts
+├── tsconfig.json       # TypeScript configuration
+├── vite.config.ts      # Vite configuration
+└── README.md          # Project documentation
+```
+
+## 🚀 GitHub Pages Deployment
+
+This project is configured for automatic deployment to GitHub Pages using GitHub Actions.
+
+### Prerequisites
+- GitHub account
+- Imgix account with Management API credentials
+
+### Deployment Steps
+
+1. **Fork/Clone Repository:**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/video-uploader.git
+   cd video-uploader
+   ```
+
+2. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Configure GitHub Secrets:**
+   Go to your GitHub repository → Settings → Secrets and variables → Actions
+   
+   Add these repository secrets:
+   ```
+   VITE_IMGIX_DOMAIN=your-domain.imgix.net
+   VITE_IMGIX_API_KEY=your-imgix-api-key
+   VITE_IMGIX_SOURCE_ID=your-imgix-source-id
+   ```
+
+4. **Enable GitHub Pages:**
+   - Go to repository Settings → Pages
+   - Source: "GitHub Actions"
+   - Save the settings
+
+5. **Deploy:**
+   ```bash
+   git add .
+   git commit -m "Initial deployment setup"
+   git push origin main
+   ```
+
+6. **Access Your Site:**
+   Your site will be available at: `https://YOUR_USERNAME.github.io/video-uploader/`
+
+### Manual Deployment (Alternative)
+
+If you prefer manual deployment:
+
+```bash
+npm run build
+npm run deploy
+```
+
+This builds the project and deploys to the `gh-pages` branch.
+
+### Environment Variables
+
+The GitHub Actions workflow automatically injects your secrets as environment variables during build:
+
+- `VITE_IMGIX_DOMAIN` - Your Imgix domain (e.g., "my-app.imgix.net")
+- `VITE_IMGIX_API_KEY` - Your Imgix Management API key
+- `VITE_IMGIX_SOURCE_ID` - Your Imgix source ID
+
+⚠️ **Security Note:** Never commit `.env` files containing real API keys to GitHub!
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Demo
+
+The application provides a complete video upload experience with:
+- Interactive drag & drop interface
+- Progress tracking for file uploads
+- Responsive design that works on all devices
+- Clean, modern UI with accessibility features
+
+Perfect for demonstrating video upload capabilities or as a starting point for more complex video processing applications.
