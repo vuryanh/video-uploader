@@ -10,13 +10,13 @@ header {
 }
 
 header h1 {
-  color: #333;
+  color: rgb(241, 245, 249);
   margin-bottom: 0.5rem;
   font-size: 2.5rem;
 }
 
 header p {
-  color: #666;
+  color: rgb(241, 245, 249, 0.8);
   font-size: 1.1rem;
 }
 
@@ -117,7 +117,7 @@ header p {
 }
 
 .test-button {
-  background-color: #646cff;
+  background-color: #59BB91;
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -128,7 +128,7 @@ header p {
 }
 
 .test-button:hover {
-  background-color: #535bf2;
+  background-color: #4a9b7a;
 }
 
 .test-result {
@@ -153,8 +153,8 @@ header p {
 
 .upload-zone:hover,
 .upload-zone.drag-over {
-  border-color: #646cff;
-  background-color: #f0f0ff;
+  border-color: #59BB91;
+  background-color: rgba(89, 187, 145, 0.1);
   transform: translateY(-2px);
 }
 
@@ -176,7 +176,7 @@ header p {
 
 .upload-button {
   display: inline-block;
-  background-color: #646cff;
+  background-color: #59BB91;
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
@@ -186,7 +186,7 @@ header p {
 }
 
 .upload-button:hover {
-  background-color: #535bf2;
+  background-color: #4a9b7a;
 }
 
 .upload-hint {
@@ -199,7 +199,7 @@ header p {
 }
 
 .files-section h2 {
-  color: #333;
+  color: rgb(241, 245, 249);
   margin-bottom: 1rem;
   font-size: 1.5rem;
 }
@@ -232,7 +232,7 @@ header p {
 
 .file-name {
   font-weight: 500;
-  color: #333;
+  color: rgb(241, 245, 249);
   margin-bottom: 0.25rem;
 }
 
