@@ -16,29 +16,30 @@ header h1 {
 }
 
 header p {
-  color: rgb(241, 245, 249, 0.8);
+  color: rgb(241, 245, 249);
   font-size: 1.1rem;
 }
 
 .debug-toggle {
   margin-top: 1rem;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
+  background-color: #1E1E23;
+  border: 1px solid #207593;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  color: white;
 }
 
 .debug-toggle:hover {
-  background-color: #e0e0e0;
-  border-color: #bbb;
+  background-color: #131C34;
+  border-color: #59BB91;
 }
 
 .debug-panel {
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background-color: #1E1E23;
+  border: 1px solid #207593;
   border-radius: 8px;
   padding: 1.5rem;
   margin-bottom: 2rem;
@@ -46,13 +47,13 @@ header p {
 
 .debug-panel h3 {
   margin: 0 0 1rem 0;
-  color: #333;
+  color: white;
   font-size: 1.2rem;
 }
 
 .debug-panel h4 {
   margin: 1rem 0 0.5rem 0;
-  color: #555;
+  color: white;
   font-size: 1rem;
 }
 
@@ -72,13 +73,15 @@ header p {
 }
 
 .status-item.configured {
-  background-color: #d1edff;
-  border: 1px solid #b3d9ff;
+  background-color: #131C34;
+  border: 1px solid #207593;
+  color: white;
 }
 
 .status-item.not-configured {
-  background-color: #ffe6e6;
-  border: 1px solid #ffcccc;
+  background-color: #1E1E23;
+  border: 1px solid #FF3C00;
+  color: white;
 }
 
 .config-details {
@@ -95,15 +98,17 @@ header p {
 
 .config-grid div {
   padding: 0.25rem;
+  color: white;
 }
 
 .config-warning {
   margin-top: 1rem;
   padding: 1rem;
-  background-color: #fff3cd;
-  border: 1px solid #ffeaa7;
+  background-color: #1E1E23;
+  border: 1px solid #FFB824;
   border-radius: 6px;
   font-size: 0.9rem;
+  color: white;
 }
 
 .config-warning p {
@@ -137,16 +142,17 @@ header p {
   border-radius: 4px;
   font-size: 0.9rem;
   font-family: monospace;
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background-color: #1E1E23;
+  border: 1px solid #207593;
+  color: white;
 }
 
 .upload-zone {
-  border: 2px dashed #ddd;
+  border: 2px dashed #207593;
   border-radius: 12px;
   padding: 3rem 2rem;
   text-align: center;
-  background-color: #f9f9f9;
+  background-color: #1E1E23;
   transition: all 0.3s ease;
   cursor: pointer;
 }
@@ -159,39 +165,51 @@ header p {
 }
 
 .upload-content svg {
-  color: #666;
+  color: rgb(241, 245, 249);
   margin-bottom: 1rem;
 }
 
 .upload-content h3 {
   margin: 0 0 1rem 0;
-  color: #333;
+  color: rgb(241, 245, 249);
   font-size: 1.5rem;
 }
 
 .upload-content p {
   margin: 1rem 0;
-  color: #666;
+  color: rgb(241, 245, 249);
 }
 
 .upload-button {
   display: inline-block;
-  background-color: #59BB91;
+  background: linear-gradient(90deg, #1E1E23 0%, #1E1E23 15%, #207593 15%, #207593 30%, #59BB91 30%, #59BB91 45%, #F5F5DC 45%, #F5F5DC 60%, #FFB824 60%, #FFB824 75%, #FF3C00 75%, #FF3C00 100%);
   color: white;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .upload-button:hover {
-  background-color: #4a9b7a;
+  background: linear-gradient(90deg, #131C34 0%, #131C34 15%, #184A5E 15%, #184A5E 30%, #4a9b7a 30%, #4a9b7a 45%, #E6E6C7 45%, #E6E6C7 60%, #D4A017 60%, #D4A017 75%, #CC3300 75%, #CC3300 100%);
+  color: white;
+  transform: translateY(-1px);
 }
 
 .upload-hint {
   font-size: 0.9rem;
-  color: #999;
+  color: white;
+}
+
+.status-text {
+  color: white;
+  font-weight: 500;
+}
+
+.file-size {
+  color: white;
+  font-weight: 400;
 }
 
 .files-section {
@@ -213,16 +231,16 @@ header p {
 .file-item {
   display: block;
   padding: 1rem;
-  background-color: #f8f8f8;
+  background-color: #1E1E23;
   border-radius: 8px;
-  border: 1px solid #eee;
+  border: 1px solid #207593;
 }
 
 .file-item.mamari-featured {
   display: block;
   padding: 1.5rem;
-  background-color: #f8f9ff;
-  border: 2px solid #007bff;
+  background-color: #1E1E23;
+  border: 2px solid #59BB91;
   border-radius: 12px;
 }
 
@@ -238,12 +256,12 @@ header p {
 
 .file-details {
   font-size: 0.9rem;
-  color: #666;
+  color: white;
 }
 
 .asset-info {
   font-size: 0.8rem;
-  color: #888;
+  color: white;
   margin-top: 0.25rem;
   font-family: monospace;
 }
@@ -266,20 +284,20 @@ header p {
 .progress-bar {
   width: 100px;
   height: 8px;
-  background-color: #e0e0e0;
+  background-color: #131C34;
   border-radius: 4px;
   overflow: hidden;
 }
 
 .progress-fill {
   height: 100%;
-  background-color: #646cff;
+  background-color: #59BB91;
   transition: width 0.3s ease;
 }
 
 .progress-text {
   font-size: 0.8rem;
-  color: #666;
+  color: white;
   min-width: 30px;
 }
 
@@ -319,7 +337,7 @@ header p {
 
 .url-group label {
   font-weight: 500;
-  color: #333;
+  color: white;
   display: block;
   margin-bottom: 0.1rem;
 }
@@ -332,10 +350,10 @@ header p {
 
 .size-links a,
 .url-group > a {
-  color: #646cff;
+  color: #59BB91;
   text-decoration: none;
   padding: 0.1rem 0.3rem;
-  border: 1px solid #646cff;
+  border: 1px solid #59BB91;
   border-radius: 3px;
   font-size: 0.7rem;
   transition: all 0.2s ease;
@@ -343,7 +361,7 @@ header p {
 
 .size-links a:hover,
 .url-group > a:hover {
-  background-color: #646cff;
+  background-color: #59BB91;
   color: white;
 }
 
@@ -369,137 +387,6 @@ header p {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  header h1 {
-    color: #fff;
-  }
-  
-  header p {
-    color: #ccc;
-  }
-  
-  .upload-zone {
-    border-color: #555;
-    background-color: #2a2a2a;
-  }
-  
-  .upload-zone:hover,
-  .upload-zone.drag-over {
-    border-color: #646cff;
-    background-color: #3a3a5a;
-  }
-  
-  .upload-content svg {
-    color: #ccc;
-  }
-  
-  .upload-content h3 {
-    color: #fff;
-  }
-  
-  .upload-content p {
-    color: #ccc;
-  }
-  
-  .files-section h2 {
-    color: #fff;
-  }
-  
-  .file-item {
-    background-color: #333;
-    border-color: #555;
-  }
-  
-  .file-name {
-    color: #fff;
-  }
-  
-  .file-details {
-    color: #ccc;
-  }
-
-  .s3-info {
-    color: #aaa;
-  }
-
-  .asset-info {
-    color: #aaa;
-  }
-
-  .progress-text {
-    color: #ccc;
-  }
-
-  .url-group label {
-    color: #fff;
-  }
-
-  .error-message {
-    color: #ff6b6b;
-  }
-
-  .debug-toggle {
-    background-color: #444;
-    border-color: #666;
-    color: #fff;
-  }
-
-  .debug-toggle:hover {
-    background-color: #555;
-    border-color: #777;
-  }
-
-  .debug-panel {
-    background-color: #2a2a2a;
-    border-color: #555;
-  }
-
-  .debug-panel h3,
-  .debug-panel h4 {
-    color: #fff;
-  }
-
-  .status-item.configured {
-    background-color: #1a4a5a;
-    border-color: #2a6a7a;
-    color: #fff;
-  }
-
-  .status-item.not-configured {
-    background-color: #4a1a1a;
-    border-color: #6a2a2a;
-    color: #fff;
-  }
-
-  .config-grid div {
-    color: #ccc;
-  }
-
-  .config-warning {
-    background-color: #3a3020;
-    border-color: #4a4030;
-    color: #fff;
-  }
-
-  .test-section {
-    border-top-color: #555;
-  }
-
-  .test-button {
-    background-color: #646cff;
-  }
-
-  .test-button:hover {
-    background-color: #535bf2;
-  }
-
-  .test-result {
-    background-color: #2a2a2a;
-    border-color: #555;
-    color: #fff;
-  }
-}
-
 /* Skeleton loader animations */
 @keyframes shimmer {
   0% { background-position: -200px 0; }
@@ -507,7 +394,7 @@ header p {
 }
 
 .skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
   background-size: 200px 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 4px;
@@ -516,14 +403,14 @@ header p {
 .skeleton-video {
   width: 100%;
   aspect-ratio: 16/9;
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
   background-size: 200px 100%;
   animation: shimmer 1.5s infinite;
   border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #999;
+  color: white;
   font-size: 12px;
 }
 
@@ -532,6 +419,10 @@ header p {
   transform: rotate(-90deg);
   width: 20px;
   height: 20px;
+}
+
+.progress-ring.completed {
+  transform: rotate(0deg);
 }
 
 .progress-ring-circle {
@@ -570,19 +461,21 @@ header p {
   gap: 0.5rem;
   margin: 0.5rem 0;
   padding: 0.5rem;
-  background: #f8fafc;
+  background: #1E1E23;
   border-radius: 6px;
   font-size: 0.875rem;
+  color: white;
+  border: 1px solid #207593;
 }
 
 .stage-indicator.active {
-  background: #eff6ff;
-  border: 1px solid #bfdbfe;
+  background: #131C34;
+  border: 1px solid #59BB91;
 }
 
 .stage-indicator.completed {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
+  background: #1E1E23;
+  border: 1px solid #59BB91;
 }
 
 .pulse {

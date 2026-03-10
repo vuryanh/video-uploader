@@ -234,8 +234,8 @@ function App() {
       { name: 'H.265 3M', codec: 'h265', bitrate: '3M' },
       { name: 'H.265 5M', codec: 'h265', bitrate: '5M' },
       { name: 'AV1 1M', codec: 'av1', bitrate: '1M' },
-      { name: 'AV1 3M', codec: 'av1', bitrate: '3M' },
-      { name: 'AV1 5M', codec: 'av1', bitrate: '5M' }
+      { name: 'AV1 5M', codec: 'av1', bitrate: '5M' },
+      { name: 'AV1 3M', codec: 'av1', bitrate: '3M' }
     ]
     
     console.log(`Generating ${variantConfigs.length} video variants...`)
@@ -365,9 +365,29 @@ function App() {
       file.type.startsWith('video/')
     )
     
-    for (const file of droppedFiles) {
-      await uploadFile(file)
-    }
+    // Add all files to state first, then upload in parallel
+    const fileIds: string[] = []
+    droppedFiles.forEach(file => {
+      const fileId = `${Date.now()}-${Math.random().toString(36).substring(2)}`
+      fileIds.push(fileId)
+      
+      const uploadedFile: UploadedFile = {
+        file,
+        id: fileId,
+        progress: 0,
+        status: 'uploading',
+        processingStage: 'upload'
+      }
+      
+      setFiles(prev => [...prev, uploadedFile])
+    })
+    
+    // Upload files in parallel
+    const uploadPromises = droppedFiles.map((file, index) => 
+      uploadFile(file, fileIds[index])
+    )
+    
+    await Promise.all(uploadPromises)
   }, [])
 
   const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -375,27 +395,49 @@ function App() {
       file.type.startsWith('video/')
     )
     
-    for (const file of selectedFiles) {
-      await uploadFile(file)
-    }
+    // Add all files to state first, then upload in parallel
+    const fileIds: string[] = []
+    selectedFiles.forEach(file => {
+      const fileId = `${Date.now()}-${Math.random().toString(36).substring(2)}`
+      fileIds.push(fileId)
+      
+      const uploadedFile: UploadedFile = {
+        file,
+        id: fileId,
+        progress: 0,
+        status: 'uploading',
+        processingStage: 'upload'
+      }
+      
+      setFiles(prev => [...prev, uploadedFile])
+    })
+    
+    // Upload files in parallel
+    const uploadPromises = selectedFiles.map((file, index) => 
+      uploadFile(file, fileIds[index])
+    )
+    
+    await Promise.all(uploadPromises)
     
     // Reset input
     e.target.value = ''
   }, [])
 
-  const uploadFile = async (file: File) => {
-    const fileId = `${Date.now()}-${Math.random().toString(36).substring(2)}`
+  const uploadFile = async (file: File, existingFileId?: string) => {
+    const fileId = existingFileId || `${Date.now()}-${Math.random().toString(36).substring(2)}`
     
-    // Add file to state with initial progress
-    const uploadedFile: UploadedFile = {
-      file,
-      id: fileId,
-      progress: 0,
-      status: 'uploading',
-      processingStage: 'upload'
+    // Add file to state only if not already added
+    if (!existingFileId) {
+      const uploadedFile: UploadedFile = {
+        file,
+        id: fileId,
+        progress: 0,
+        status: 'uploading',
+        processingStage: 'upload'
+      }
+      
+      setFiles(prev => [...prev, uploadedFile])
     }
-    
-    setFiles(prev => [...prev, uploadedFile])
     
     try {
       console.log(`Starting upload for: ${file.name}`)
@@ -419,9 +461,9 @@ function App() {
         // Create initial Imgix URLs using the configured domain and originPath
         const baseUrl = `https://${IMGIX_CONFIG.domain}${originPath.startsWith('/') ? originPath : '/' + originPath}`
         const rawUrl = baseUrl // Original without any transformations
-        console.log('🎥 Generated base URL:', baseUrl)
-        console.log('🔧 Using domain:', IMGIX_CONFIG.domain)
-        console.log('📂 Origin path:', originPath)
+        console.log('Generated base URL:', baseUrl)
+        console.log('Using domain:', IMGIX_CONFIG.domain)
+        console.log('Origin path:', originPath)
         
         const imgixUrls = {
           thumbnail: `${baseUrl}?fm=jpg&w=200&h=150&fit=crop&crop=smart`,
@@ -431,7 +473,7 @@ function App() {
           original: rawUrl
         }
         
-        console.log('🎬 Generated video URLs:', imgixUrls)
+        console.log('Generated video URLs:', imgixUrls)
         
         setFiles(prev => prev.map(f => 
           f.id === fileId 
@@ -471,6 +513,12 @@ function App() {
       <header>
         <h1>Imgix Video Codec Comparisons</h1>
         <p>Upload videos to analyze and compare H.264, H.265, and AV1 codec performance across multiple bitrates. See real-time file sizes, compression ratios, and quality differences powered by Imgix's video processing API.</p>
+        <p style={{ fontSize: '0.9rem', color: 'rgb(200, 210, 220)', marginTop: '0.5rem' }}>
+          <strong>Device Compatibility:</strong> H.264 works on all devices (iPhones, Android, smart TVs, older browsers). H.265 is supported by iPhone 7+, modern Android phones, 4K TVs, and Apple TV. AV1 is optimized for latest Chrome/Firefox browsers, newer smart TVs, and next-gen streaming devices.
+        </p>
+        <p style={{ fontSize: '0.9rem', color: 'rgb(200, 210, 220)', marginTop: '0.5rem' }}>
+          <strong>Video Srcset Optimization:</strong> Use multiple codec sources in your HTML video element to optimize delivery by up to 34%. List AV1 first (most efficient), then H.265 (better compression), then H.264 (universal fallback). Browsers automatically select the best supported format for optimal performance and smaller file sizes. <a href="https://docs.imgix.com/en-US/getting-started/tutorials/performance-and-metadata/creating-a-user-friendly-video-player#optimizing-with-codec-based-source-sets" target="_blank" rel="noopener noreferrer" style={{ color: '#59BB91' }}>Learn more about codec-based source sets</a>.
+        </p>
       </header>
 
       <div 
@@ -481,9 +529,28 @@ function App() {
         onClick={() => document.getElementById('fileInput')?.click()}
       >
         <div className="upload-content">
-          <div className="upload-icon">📁</div>
+          <div className="upload-icon">Upload</div>
           <h3>Drop video files here or click to select</h3>
           <p>Supports MP4, MOV, AVI, and other video formats</p>
+          
+          {files.some(f => f.status === 'uploading' || f.status === 'analyzing') && (
+            <div style={{ 
+              marginTop: '20px', 
+              padding: '15px', 
+              backgroundColor: '#1E1E23', 
+              borderRadius: '8px', 
+              border: '1px solid #207593' 
+            }}>
+              <p style={{ color: '#FFB824', margin: '0 0 10px 0', fontWeight: 'bold' }}>
+                Processing {files.filter(f => f.status === 'uploading' || f.status === 'analyzing').length} video{files.filter(f => f.status === 'uploading' || f.status === 'analyzing').length > 1 ? 's' : ''}
+              </p>
+              <p style={{ color: 'rgb(241, 245, 249)', margin: 0, fontSize: '0.9rem' }}>
+                Analysis typically takes 2-3 minutes per video.<br/>
+                Check back shortly for codec comparison results.
+              </p>
+            </div>
+          )}
+          
           <input
             id="fileInput"
             type="file"
@@ -557,19 +624,11 @@ function App() {
                           </>
                         )}
                         {file.status === 'completed' && (
-                          <>
-                            <div className="progress-ring completed">
-                              <svg width="20" height="20">
-                                <circle cx="10" cy="10" r="8" stroke="#28a745" strokeWidth="2" fill="#28a745"/>
-                                <path d="M6 10l2 2 4-4" stroke="white" strokeWidth="2" fill="none"/>
-                              </svg>
-                            </div>
-                            <span className="status-text">Analysis Complete</span>
-                          </>
+                          <span className="status-text">Analysis Complete</span>
                         )}
                         {file.status === 'error' && (
                           <>
-                            <div className="error-indicator">❌</div>
+                            <div className="error-indicator">Error</div>
                             <span className="status-text error">Error</span>
                           </>
                         )}
@@ -582,12 +641,12 @@ function App() {
                     <div className="video-variants-comparison" style={{
                       marginTop: '15px',
                       padding: '15px',
-                      border: '1px solid #e1e5e9',
+                      border: '1px solid #207593',
                       borderRadius: '8px',
-                      backgroundColor: '#f8f9fa'
+                      backgroundColor: '#1E1E23'
                     }}>
-                      <h4 style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold' }}>
-                        🎥 Imgix Video Codec & Bitrate Analysis
+                      <h4 style={{ margin: '0 0 15px 0', fontSize: '1.6rem', fontWeight: 'bold', color: 'rgb(241, 245, 249)' }}>
+                        Imgix Video Codec & Bitrate Analysis
                       </h4>
                       
                       {/* Codec-Based Row Layout: Each codec gets its own row */}
@@ -596,7 +655,7 @@ function App() {
                         {file.videoVariants?.length > 0 && (
                           <div style={{ marginBottom: '24px' }}>
                             <h5 style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold', color: 'rgb(241, 245, 249)' }}>
-                              📄 Original Video Analysis
+                              Original Video Analysis
                             </h5>
                             <div style={{
                               display: 'grid',
@@ -608,7 +667,7 @@ function App() {
                                 border: '2px solid #59BB91',
                                 borderRadius: '8px',
                                 padding: '12px',
-                                backgroundColor: '#ffffff'
+                                backgroundColor: '#1E1E23'
                               }}>
                                 <video
                                   src={file.videoVariants[0].url}
@@ -627,22 +686,22 @@ function App() {
                                   {file.videoVariants[0].metadata && (
                                     <div style={{ marginTop: '4px' }}>
                                       {file.videoVariants[0].metadata.resolution && (
-                                        <div>📱 {file.videoVariants[0].metadata.resolution}</div>
+                                        <div>Resolution: {file.videoVariants[0].metadata.resolution}</div>
                                       )}
                                       {file.videoVariants[0].metadata.containerFormat && (
-                                        <div>📁 {file.videoVariants[0].metadata.containerFormat}</div>
+                                        <div>Container: {file.videoVariants[0].metadata.containerFormat}</div>
                                       )}
                                       {file.videoVariants[0].metadata.codec && (
-                                        <div>🎧 {file.videoVariants[0].metadata.codec}</div>
+                                        <div>Codec: {file.videoVariants[0].metadata.codec}</div>
                                       )}
                                       {file.videoVariants[0].metadata.bitrate && (
-                                        <div>📊 Bitrate: {file.videoVariants[0].metadata.bitrate.toLocaleString()} kbps</div>
+                                        <div>Bitrate: {file.videoVariants[0].metadata.bitrate.toLocaleString()} kbps</div>
                                       )}
                                       {file.videoVariants[0].metadata.duration && (
-                                        <div>⏱️ {file.videoVariants[0].metadata.duration}s</div>
+                                        <div>Duration: {file.videoVariants[0].metadata.duration}s</div>
                                       )}
                                       {file.videoVariants[0].size && (
-                                        <div>📏 Size: {formatFileSize(file.videoVariants[0].size)}</div>
+                                        <div>Size: {formatFileSize(file.videoVariants[0].size)}</div>
                                       )}
                                     </div>
                                   )}
@@ -654,15 +713,15 @@ function App() {
                                 const formatMp4Variant = file.videoVariants.find(v => v.name === 'Format MP4')
                                 return formatMp4Variant && (
                                   <div style={{
-                                    border: '1px solid #28a745',
+                                    border: '1px solid #59BB91',
                                     borderRadius: '8px',
                                     padding: '12px',
-                                    backgroundColor: '#ffffff'
+                                    backgroundColor: '#1E1E23'
                                   }}>
                                     <h6 style={{ margin: '0 0 8px 0', fontSize: '11px', fontWeight: 'bold', color: 'rgb(241, 245, 249)' }}>
                                       {formatMp4Variant.name}
                                       {file.variantProgress && file.variantProgress[formatMp4Variant.name] === 100 && (
-                                        <span style={{ color: '#10b981', marginLeft: '4px' }}>✓</span>
+                                        <span style={{ color: '#10b981', marginLeft: '4px', display: 'inline-block', transform: 'rotate(0deg)' }}>Done</span>
                                       )}
                                     </h6>
                                     
@@ -670,7 +729,7 @@ function App() {
                                       <div className="skeleton-video" style={{
                                         width: '100%',
                                         aspectRatio: '16/9',
-                                        backgroundColor: '#e9ecef',
+                                        backgroundColor: '#1E1E23',
                                         borderRadius: '4px',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -702,10 +761,13 @@ function App() {
                                     )}
                                     
                                     <div style={{ fontSize: '11px', color: 'rgb(241 245 249)' }}>
-                                      <div><strong>📦 {formatMp4Variant.codec}</strong></div>
-                                      <div>🔗 URL: <a href={formatMp4Variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#59BB91' }}>{formatMp4Variant.url}</a></div>
+                                      <div><strong>Format: {formatMp4Variant.codec}</strong></div>
+                                      {formatMp4Variant.metadata?.bitrate && (
+                                        <div>Bitrate: {formatMp4Variant.metadata.bitrate.toLocaleString()} kbps</div>
+                                      )}
+                                      <div>URL: <a href={formatMp4Variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#59BB91' }}>{formatMp4Variant.url}</a></div>
                                       {formatMp4Variant.size && (
-                                        <div>📏 Size: {formatFileSize(formatMp4Variant.size)}</div>
+                                        <div>Size: {formatFileSize(formatMp4Variant.size)}</div>
                                       )}
                                     </div>
                                   </div>
@@ -721,7 +783,7 @@ function App() {
                           return h264Variants.length > 0 && (
                             <div style={{ marginBottom: '24px' }}>
                               <h5 style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold', color: 'rgb(241, 245, 249)' }}>
-                                🔴 H.264 Codec Analysis
+                                H.264 Codec Analysis
                               </h5>
                               <div style={{
                                 display: 'grid',
@@ -730,15 +792,15 @@ function App() {
                               }}>
                                 {h264Variants.map((variant, index) => (
                                   <div key={`h264-${index}`} style={{
-                                    border: '1px solid #dc3545',
+                                    border: '1px solid #FF3C00',
                                     borderRadius: '6px',
                                     padding: '10px',
-                                    backgroundColor: '#ffffff'
+                                    backgroundColor: '#1E1E23'
                                   }}>
                                     <h6 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 'bold', color: 'rgb(241, 245, 249)' }}>
                                       {variant.name}
                                       {file.variantProgress && file.variantProgress[variant.name] === 100 && (
-                                        <span style={{ color: '#10b981', marginLeft: '4px' }}>✓</span>
+                                        <span style={{ color: '#10b981', marginLeft: '4px', display: 'inline-block', transform: 'rotate(0deg)' }}>Done</span>
                                       )}
                                     </h6>
                                     
@@ -746,7 +808,7 @@ function App() {
                                       <div className="skeleton-video" style={{
                                         width: '100%',
                                         aspectRatio: '16/9',
-                                        backgroundColor: '#e9ecef',
+                                        backgroundColor: '#1E1E23',
                                         borderRadius: '4px',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -778,21 +840,21 @@ function App() {
                                     )}
                                     
                                     <div style={{ fontSize: '11px', color: 'rgb(241, 245, 249)' }}>
-                                      <div><strong>📦 {variant.codec}</strong></div>
-                                      <div>📊 Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
-                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#59BB91' }}>{variant.url}</a></div>
+                                      <div><strong>Codec: {variant.codec}</strong></div>
+                                      <div>Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
+                                      <div>URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#59BB91' }}>{variant.url}</a></div>
                                       {variant.size && (
-                                        <div>📏 Size: {formatFileSize(variant.size)}</div>
+                                        <div>Size: {formatFileSize(variant.size)}</div>
                                       )}
                                       {variant.metadata && variant.metadata.bitrate && (
                                         <div style={{
                                           marginTop: '4px',
                                           padding: '2px 4px',
-                                          backgroundColor: '#ffe6e6',
+                                          backgroundColor: '#1E1E23',
                                           borderRadius: '2px',
                                           fontSize: '10px'
                                         }}>
-                                          🎯 Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? '✓' : '⚠️'}
+                                          Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? 'Good' : 'Fair'}
                                         </div>
                                       )}
                                     </div>
@@ -809,7 +871,7 @@ function App() {
                           return h265Variants.length > 0 && (
                             <div style={{ marginBottom: '24px' }}>
                               <h5 style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold', color: 'rgb(241, 245, 249)' }}>
-                                🟡 H.265 Codec Analysis
+                                H.265 Codec Analysis
                               </h5>
                               <div style={{
                                 display: 'grid',
@@ -818,15 +880,15 @@ function App() {
                               }}>
                                 {h265Variants.map((variant, index) => (
                                   <div key={`h265-${index}`} style={{
-                                    border: '1px solid #ffc107',
+                                    border: '1px solid #FFB824',
                                     borderRadius: '6px',
                                     padding: '10px',
-                                    backgroundColor: '#ffffff'
+                                    backgroundColor: '#1E1E23'
                                   }}>
                                     <h6 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 'bold', color: 'rgb(241, 245, 249)' }}>
                                       {variant.name}
                                       {file.variantProgress && file.variantProgress[variant.name] === 100 && (
-                                        <span style={{ color: '#10b981', marginLeft: '4px' }}>✓</span>
+                                        <span style={{ color: '#10b981', marginLeft: '4px', display: 'inline-block', transform: 'rotate(0deg)' }}>Done</span>
                                       )}
                                     </h6>
                                     
@@ -834,7 +896,7 @@ function App() {
                                       <div className="skeleton-video" style={{
                                         width: '100%',
                                         aspectRatio: '16/9',
-                                        backgroundColor: '#e9ecef',
+                                        backgroundColor: '#1E1E23',
                                         borderRadius: '4px',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -866,21 +928,21 @@ function App() {
                                     )}
                                     
                                     <div style={{ fontSize: '11px', color: 'rgb(241, 245, 249)' }}>
-                                      <div><strong>📦 {variant.codec}</strong></div>
-                                      <div>📊 Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
-                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#59BB91' }}>{variant.url}</a></div>
+                                      <div><strong>Codec: {variant.codec}</strong></div>
+                                      <div>Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
+                                      <div>URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#59BB91' }}>{variant.url}</a></div>
                                       {variant.size && (
-                                        <div>📏 Size: {formatFileSize(variant.size)}</div>
+                                        <div>Size: {formatFileSize(variant.size)}</div>
                                       )}
                                       {variant.metadata && variant.metadata.bitrate && (
                                         <div style={{
                                           marginTop: '4px',
                                           padding: '2px 4px',
-                                          backgroundColor: '#fff3cd',
+                                          backgroundColor: '#1E1E23',
                                           borderRadius: '2px',
                                           fontSize: '10px'
                                         }}>
-                                          🎯 Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? '✓' : '⚠️'}
+                                          Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? 'Good' : 'Fair'}
                                         </div>
                                       )}
                                     </div>
@@ -897,7 +959,7 @@ function App() {
                           return av1Variants.length > 0 && (
                             <div style={{ marginBottom: '24px' }}>
                               <h5 style={{ margin: '0 0 15px 0', fontSize: '14px', fontWeight: 'bold', color: 'rgb(241, 245, 249)' }}>
-                                🟢 AV1 Codec Analysis
+                                AV1 Codec Analysis
                               </h5>
                               <div style={{
                                 display: 'grid',
@@ -906,15 +968,15 @@ function App() {
                               }}>
                                 {av1Variants.map((variant, index) => (
                                   <div key={`av1-${index}`} style={{
-                                    border: '1px solid #28a745',
+                                    border: '1px solid #59BB91',
                                     borderRadius: '6px',
                                     padding: '10px',
-                                    backgroundColor: '#ffffff'
+                                    backgroundColor: '#1E1E23'
                                   }}>
                                     <h6 style={{ margin: '0 0 8px 0', fontSize: '12px', fontWeight: 'bold', color: 'rgb(241, 245, 249)' }}>
                                       {variant.name}
                                       {file.variantProgress && file.variantProgress[variant.name] === 100 && (
-                                        <span style={{ color: '#10b981', marginLeft: '4px' }}>✓</span>
+                                        <span style={{ color: '#10b981', marginLeft: '4px', display: 'inline-block', transform: 'rotate(0deg)' }}>Done</span>
                                       )}
                                     </h6>
                                     
@@ -922,7 +984,7 @@ function App() {
                                       <div className="skeleton-video" style={{
                                         width: '100%',
                                         aspectRatio: '16/9',
-                                        backgroundColor: '#e9ecef',
+                                        backgroundColor: '#1E1E23',
                                         borderRadius: '4px',
                                         display: 'flex',
                                         alignItems: 'center',
@@ -954,21 +1016,21 @@ function App() {
                                     )}
                                     
                                     <div style={{ fontSize: '11px', color: 'rgb(241, 245, 249)' }}>
-                                      <div><strong>📦 {variant.codec}</strong></div>
-                                      <div>📊 Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
-                                      <div>🔗 URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#59BB91' }}>{variant.url}</a></div>
+                                      <div><strong>Codec: {variant.codec}</strong></div>
+                                      <div>Target: {variant.bitrate?.toLocaleString() || 'N/A'} kbps</div>
+                                      <div>URL: <a href={variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#59BB91' }}>{variant.url}</a></div>
                                       {variant.size && (
-                                        <div>📏 Size: {formatFileSize(variant.size)}</div>
+                                        <div>Size: {formatFileSize(variant.size)}</div>
                                       )}
                                       {variant.metadata && variant.metadata.bitrate && (
                                         <div style={{
                                           marginTop: '4px',
                                           padding: '2px 4px',
-                                          backgroundColor: '#d4edda',
+                                          backgroundColor: '#1E1E23',
                                           borderRadius: '2px',
                                           fontSize: '10px'
                                         }}>
-                                          🎯 Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? '✓' : '⚠️'}
+                                          Accuracy: {Math.abs(((variant.metadata.bitrate - variant.bitrate!) / variant.bitrate! * 100)).toFixed(1)}% {Math.abs(variant.metadata.bitrate - variant.bitrate!) < variant.bitrate! * 0.1 ? 'Good' : 'Fair'}
                                         </div>
                                       )}
                                     </div>
@@ -983,26 +1045,26 @@ function App() {
                       {/* Enhanced Compression Analysis */}
                       <div style={{
                         padding: '12px',
-                        backgroundColor: '#e7f3ff',
-                        border: '1px solid #b3d9ff',
+                        backgroundColor: '#1E1E23',
+                        border: '1px solid #207593',
                         borderRadius: '6px',
                         fontSize: '12px'
                       }}>
-                        <div style={{ fontWeight: 'bold', marginBottom: '8px', display: 'flex', alignItems: 'center' }}>
-                          📊 Comprehensive Video Analysis
+                        <div style={{ fontWeight: 'bold', marginBottom: '8px', display: 'flex', alignItems: 'center', color: 'white' }}>
+                          Comprehensive Video Analysis
                         </div>
                         
                         {/* Original File Analysis */}
                         {file.videoVariants && file.videoVariants.length > 0 && file.videoVariants[0].metadata && (
-                          <div style={{ marginBottom: '10px', padding: '8px', backgroundColor: '#f8f9fa', borderRadius: '4px', border: '1px solid #dee2e6' }}>
-                            <div style={{ fontWeight: 'bold', fontSize: '11px', marginBottom: '4px' }}>📄 Original File Analysis:</div>
+                          <div style={{ marginBottom: '10px', padding: '8px', backgroundColor: '#1E1E23', borderRadius: '4px', border: '1px solid #207593' }}>
+                            <div style={{ fontWeight: 'bold', fontSize: '11px', marginBottom: '4px', color: 'white' }}>Original File Analysis:</div>
                             <div style={{ fontSize: '10px', color: 'rgb(241, 245, 249)' }}>
-                              <div>📹 Source: {file.videoVariants[0].metadata.fileFormat || 'Unknown format'}</div>
-                              <div>🎧 Codec: {file.videoVariants[0].metadata.codec || 'Unknown codec'}</div>
-                              <div>📊 Bitrate: {file.videoVariants[0].metadata.bitrate?.toLocaleString() || 'Calculating...'} kbps</div>
-                              <div>📱 Resolution: {file.videoVariants[0].metadata.resolution || 'Unknown'}</div>
-                              <div>📏 Size: {file.videoVariants[0].size ? formatFileSize(file.videoVariants[0].size) : 'Unknown'}</div>
-                              <div>🔗 URL: <a href={file.videoVariants[0].url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', wordBreak: 'break-all', color: '#59BB91' }}>{file.videoVariants[0].url}</a></div>
+                              <div>Source: {file.videoVariants[0].metadata.fileFormat || 'Unknown format'}</div>
+                              <div>Codec: {file.videoVariants[0].metadata.codec || 'Unknown codec'}</div>
+                              <div>Bitrate: {file.videoVariants[0].metadata.bitrate?.toLocaleString() || 'Calculating...'} kbps</div>
+                              <div>Resolution: {file.videoVariants[0].metadata.resolution || 'Unknown'}</div>
+                              <div>Size: {file.videoVariants[0].size ? formatFileSize(file.videoVariants[0].size) : 'Unknown'}</div>
+                              <div>URL: <a href={file.videoVariants[0].url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', wordBreak: 'break-all', color: '#59BB91' }}>{file.videoVariants[0].url}</a></div>
                             </div>
                           </div>
                         )}
@@ -1010,8 +1072,8 @@ function App() {
                         {/* Compression Efficiency Summary */}
                         {file.videoVariants && file.videoVariants.length > 1 && (
                           <div style={{ color: 'rgb(241, 245, 249)' }}>
-                            <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>📈 Compression Results:</div>
-                            <div style={{ fontSize: '12px', lineHeight: '1.4' }}>
+                            <div style={{ fontWeight: 'bold', marginBottom: '4px', color: 'white' }}>Compression Results:</div>
+                            <div style={{ fontSize: '12px', lineHeight: '1.4', color: 'white' }}>
                               • <strong>Variants Generated</strong>: {file.videoVariants.length - 1} optimized versions<br/>
                               • <strong>Codecs Tested</strong>: {[...new Set(file.videoVariants.slice(1).map(v => v.codec))].join(', ')}<br/>
                               • <strong>Bitrate Range</strong>: {Math.min(...file.videoVariants.slice(1).filter(v => v.bitrate).map(v => v.bitrate!)).toLocaleString()}kbps - {Math.max(...file.videoVariants.slice(1).filter(v => v.bitrate).map(v => v.bitrate!)).toLocaleString()}kbps<br/>
@@ -1037,7 +1099,7 @@ function App() {
                       
                   {file.status === 'error' && (
                     <div className="error-status">
-                      <p>❌ Upload failed: {file.error}</p>
+                      <p>Upload failed: {file.error}</p>
                     </div>
                   )}
                 </div>
