@@ -762,9 +762,7 @@ function App() {
                                     
                                     <div style={{ fontSize: '11px', color: 'rgb(241 245 249)' }}>
                                       <div><strong>Format: {formatMp4Variant.codec}</strong></div>
-                                      {formatMp4Variant.metadata?.bitrate && (
-                                        <div>Bitrate: {formatMp4Variant.metadata.bitrate.toLocaleString()} kbps</div>
-                                      )}
+                                      <div>Bitrate: {formatMp4Variant.metadata?.bitrate ? formatMp4Variant.metadata.bitrate.toLocaleString() + ' kbps' : 'Analyzing...'}</div>
                                       <div>URL: <a href={formatMp4Variant.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: '10px', wordBreak: 'break-all', color: '#59BB91' }}>{formatMp4Variant.url}</a></div>
                                       {formatMp4Variant.size && (
                                         <div>Size: {formatFileSize(formatMp4Variant.size)}</div>
